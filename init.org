@@ -1,0 +1,182 @@
+#+TITLE: My Emacs Configuration
+#+STARTUP: showeverything
+
+
+
+* Configuration
+#+NAME: conf-init
+** About this file
+#+NAME: about-file
+My personal emacs configuration. Has been written like a "org" file
+because which in my opinion is a better way to write it.  
+
+Was inspired by [[https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org][Sacha Chua Emacs configuration]].
+
+** Startup
+#+NAME: startup
+
+#+begin_src emacs-lisp :tangle yes
+(require 'package)
+(package-initialize)
+(setq package-enable-at-startup nil)
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
+#+end_src
+
+
+** Personal information
+#+begin_src emacs-lisp :tangle yes
+(setq user-full-name "Julio Oliveira"
+      user-mail-address "antoniojuliodeo@gmail.com")
+#+end_src
+
+
+** Emacs Initialization
+*** Add Packages Sources
+#+begin_src emacs-lisp :tangle yes
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+#+end_src
+
+*** Add my elisp directory, my themes and other files
+#+begin_src emacs-lisp :tangle yes
+(add-to-list 'load-path "~/.emacs.d/elisp/")
+(add-to-list 'load-path "~/.emacs.d/elisp/themes/")
+
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+#+end_src
+
+
+** General configuration
+*** Backups
+#+begin_src emacs-lisp :tangle yes
+
+;; default directories
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
+
+;; backup config
+(setq delete-old-versions -1)
+(setq version-control t)
+(setq vc-make-backup-files t)
+
+#+end_src
+
+*** Theme
+#+begin_src emacs-lisp :tangle yes
+(add-to-list 'custom-theme-load-path "~/.emacs.d/elisp/themes/")
+(load-theme 'solarized-dark t)
+#+end_src
+
+*** Windows configuration
+Disables the menu, and the useless scrollbar and toolbar.
+#+begin_src emacs-lisp :tangle yes
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+#+end_src
+
+Inhibit the startup screen, and initial (useless) messages
+#+begin_src emacs-lisp :tangle yes
+(setq inhibit-startup-screen  t
+initial-scratch-message nil)
+#+end_src
+
+*** Mode line and highlight line
+Shows the (Line, Column) information in the mode-line.
+#+begin_src emacs-lisp :tangle yes
+(line-number-mode   1)
+(column-number-mode 1)
+#+end_src
+
+Highlight both the current line and matching parenthesis.
+#+begin_src emacs-lisp :tangle yes
+(global-hl-line-mode   1)
+(show-paren-mode 1)
+#+end_src
+
+Enable smart-mode-line
+#+begin_src emacs-lisp :tangle yes
+(sml/setup)
+#+end_src
+
+Baterry and time
+#+begin_src emacs-lisp :tangle yes
+(display-battery-mode)
+(display-time-mode)
+#+end_src
+
+*** ido
+Enable ido
+#+begin_src emacs-lisp :tangle yes
+(require 'ido)
+(ido-mode t)
+#+end_src
+
+*** linum and linum relative
+#+begin_src emacs-lisp :tangle yes
+(require 'linum)
+(require 'linum-relative)
+(global-linum-mode t)
+(linum-relative-global-mode t)
+#+end_src
+
+** Org
+
+*** Packages
+#+begin_src emacs-lisp :tangle yes
+(require 'org-learn)
+(require 'org-drill)
+(require 'org-bullets)
+#+end_src
+
+*** Key commands
+#+begin_src emacs-lisp :tangle yes
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-cb" 'org-iswitchb)
+#+end_src
+
+*** TODO's 
+Keywords
+#+begin_src emacs-lisp :tangle yes
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "|" "DONE(d)")
+	(sequence "|" "CANCELED(c)")))
+#+end_src
+
+Done
+#+begin_src emacs-lisp :tangle yes
+(setq org-log-done 'time)
+#+end_src
+
+*** Agenda
+#+begin_src emacs-lisp :tangle yes
+;; (setq org-agenda-files '("~/Dropbox/org/agenda"))
+#+end_src
+
+*** Hook
+#+begin_src emacs-lisp :tangle yes
+(add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
+#+end_src
+
+#+begin_src emacs-lisp :tangle yes
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+end_src
+
+
+** Yasnippet
+*** Package
+#+begin_src emacs-lisp :tangle yes
+(require 'yasnippet)
+#+end_src
+
+*** Global
+#+begin_src emacs-lisp :tangle yes
+(yas-global-mode 1)
+#+end_src

@@ -1,0 +1,5 @@
+# name : print
+# key : pr
+# binding: C-'
+# --
+'''`yas-selected-text`$0'''
