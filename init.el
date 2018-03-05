@@ -82,3 +82,10 @@ initial-scratch-message nil)
 (require 'yasnippet)
 
 (yas-global-mode 1)
+
+(use-package python
+  :init (elpy-enable)
+  :mode ("\\.py\\'" . python-mode)
+  :interpreter ("python" . python-mode))
+
+(global-set-key (kbd "C-c j") 'avy-goto-char)

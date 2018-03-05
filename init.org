@@ -180,3 +180,16 @@ Done
 #+begin_src emacs-lisp :tangle yes
 (yas-global-mode 1)
 #+end_src
+
+** Python
+#+begin_src emacs-lisp :tangle yes
+  (use-package python
+    :init (elpy-enable)
+    :mode ("\\.py\\'" . python-mode)
+    :interpreter ("python" . python-mode))
+#+end_src
+
+** avy
+#+begin_src emacs-lisp :tangle yes
+(global-set-key (kbd "C-c j") 'avy-goto-char)
+#+end_src
