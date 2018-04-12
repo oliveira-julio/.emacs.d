@@ -80,6 +80,11 @@ Disables the menu, and the useless scrollbar and toolbar.
 (tool-bar-mode -1)
 #+end_src
 
+Move windows with shift
+#+begin_src emacs-lisp :tangle yes
+(windmove-default-keybindings)
+#+end_src
+
 Inhibit the startup screen, and initial (useless) messages
 #+begin_src emacs-lisp :tangle yes
 (setq inhibit-startup-screen  t
@@ -184,7 +189,12 @@ Done
 ** Python
 #+begin_src emacs-lisp :tangle yes
   (use-package python
-    :init (elpy-enable)
+    :init
+    (elpy-enable)
+    
+    :hook
+    ((python-mode . pygen-mode))
+    
     :mode ("\\.py\\'" . python-mode)
     :interpreter ("python" . python-mode))
 #+end_src
