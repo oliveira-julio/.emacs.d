@@ -21,6 +21,7 @@ Was inspired by [[https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org][Sa
 (setq package-enable-at-startup nil)
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
+(find-file "~/todo.org")
 #+end_src
 
 
@@ -68,8 +69,8 @@ Was inspired by [[https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org][Sa
 
 *** Theme
 #+begin_src emacs-lisp :tangle yes
-(add-to-list 'custom-theme-load-path "~/.emacs.d/elisp/themes/")
-(load-theme 'solarized-dark t)
+
+(load-theme 'material t)
 #+end_src
 
 *** Windows configuration
@@ -106,7 +107,12 @@ Highlight both the current line and matching parenthesis.
 
 Enable smart-mode-line
 #+begin_src emacs-lisp :tangle yes
-(sml/setup)
+(require 'telephone-line)
+(telephone-line-mode 1)
+(setq telephone-line-primary-left-separator 'telephone-line-cubed-left
+      telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
+      telephone-line-primary-right-separator 'telephone-line-cubed-right
+      telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
 #+end_src
 
 Baterry and time
@@ -191,9 +197,12 @@ Done
   (use-package python
     :init
     (elpy-enable)
-    
+
     :hook
-    ((python-mode . pygen-mode))
+    ((python-mode . pygen-mode)
+     (python-mode . electric-operator-mode))
+
+
     
     :mode ("\\.py\\'" . python-mode)
     :interpreter ("python" . python-mode))
@@ -202,4 +211,15 @@ Done
 ** avy
 #+begin_src emacs-lisp :tangle yes
 (global-set-key (kbd "C-c j") 'avy-goto-char)
+#+end_src
+
+** expand region
+#+begin_src emacs-lisp :tangle yes
+(global-set-key (kbd "C-=") 'er/expand-region)
+#+end_src
+
+
+** mark all
+#+begin_src emacs-lisp :tangle yes
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 #+end_src
