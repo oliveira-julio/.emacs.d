@@ -4,6 +4,7 @@
 (setq package-enable-at-startup nil)
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
+(find-file "~/todo.org")
 
 (setq user-full-name "Julio Oliveira"
       user-mail-address "antoniojuliodeo@gmail.com")
@@ -29,12 +30,23 @@
 (setq version-control t)
 (setq vc-make-backup-files t)
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/elisp/themes/")
-(load-theme 'solarized-dark t)
+(load-theme 'material t)
+
+(require 'helm)
+(require 'helm-config)
+(helm-mode 1)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
+
+(windmove-default-keybindings)
 
 (setq inhibit-startup-screen  t
 initial-scratch-message nil)
@@ -45,7 +57,12 @@ initial-scratch-message nil)
 (global-hl-line-mode   1)
 (show-paren-mode 1)
 
-(sml/setup)
+(require 'telephone-line)
+(telephone-line-mode 1)
+(setq telephone-line-primary-left-separator 'telephone-line-cubed-left
+      telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
+      telephone-line-primary-right-separator 'telephone-line-cubed-right
+      telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
 
 (display-battery-mode)
 (display-time-mode)
@@ -84,8 +101,20 @@ initial-scratch-message nil)
 (yas-global-mode 1)
 
 (use-package python
-  :init (elpy-enable)
+  :init
+  (elpy-enable)
+
+  :hook
+  ((python-mode . pygen-mode)
+   (python-mode . electric-operator-mode))
+
+
+  
   :mode ("\\.py\\'" . python-mode)
   :interpreter ("python" . python-mode))
 
 (global-set-key (kbd "C-c j") 'avy-goto-char)
+
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
