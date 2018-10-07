@@ -30,47 +30,7 @@
 (setq version-control t)
 (setq vc-make-backup-files t)
 
-(use-package material-theme
-  :ensure t
-  :init
-  (load-theme 'material t))
-
-(use-package guide-key
-  :ensure t
-
-  :config
-  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4"))
-  (setq guide-key/guide-key-sequence '("C-x"))
-  (setq guide-key/guide-key-sequence '("C-c"))
-  (setq guide-key/recursive-key-sequence-flag t)
-
-  :init
-  (guide-key-mode 1))
-
 (fset 'yes-or-no-p 'y-or-n-p)
-
-(use-package helm
-  :diminish helm-mode
-  :init
-
-  (progn
-    (require 'helm-config)
-    (helm-mode 1))
-
-  
-  :bind (("C-c h" . helm-mini)
-         ("C-h a" . helm-apropos)
-         ("C-x C-b" . helm-buffers-list)
-         ("C-x C-f" . helm-find-files)
-         ("C-x b" . helm-buffers-list)
-         ("M-y" . helm-show-kill-ring)
-         ("M-x" . helm-M-x)
-         ("C-x c o" . helm-occur)
-         ("C-x c s" . helm-swoop)
-         ("C-x c y" . helm-yas-complete)
-         ("C-x c Y" . helm-yas-create-snippet-on-region)
-         ("C-x c b" . my/helm-do-grep-book-notes)
-         ("C-x c SPC" . helm-all-mark-rings)))
 
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
@@ -80,6 +40,11 @@
 
 (setq inhibit-startup-screen  t
 initial-scratch-message nil)
+
+(use-package material-theme
+  :ensure t
+  :init
+  (load-theme 'material t))
 
 (line-number-mode   1)
 (column-number-mode 1)
@@ -107,6 +72,44 @@ initial-scratch-message nil)
   :config
   (linum-relative-global-mode t))
 
+(use-package guide-key
+  :ensure t
+
+  :config
+  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4"))
+  (setq guide-key/guide-key-sequence '("C-x"))
+  (setq guide-key/guide-key-sequence '("C-c"))
+  (setq guide-key/recursive-key-sequence-flag t)
+
+  :init
+  (guide-key-mode 1))
+
+(use-package helm
+  :diminish helm-mode
+  :init
+
+  (progn
+    (require 'helm-config)
+    (helm-mode 1))
+
+  
+  :bind (("C-c h" . helm-mini)
+         ("C-h a" . helm-apropos)
+         ("C-x C-b" . helm-buffers-list)
+         ("C-x C-f" . helm-find-files)
+         ("C-x b" . helm-buffers-list)
+         ("M-y" . helm-show-kill-ring)
+         ("M-x" . helm-M-x)
+         ("C-x c o" . helm-occur)
+         ("C-x c s" . helm-swoop)
+         ("C-x c y" . helm-yas-complete)
+         ("C-x c Y" . helm-yas-create-snippet-on-region)
+         ("C-x c b" . my/helm-do-grep-book-notes)
+         ("C-x c SPC" . helm-all-mark-rings)))
+
+(use-package yasnippet
+  :ensure t)
+
 (use-package org-bullets
   :ensure t)
 (use-package org
@@ -126,23 +129,6 @@ initial-scratch-message nil)
           (sequence "|" "CANCELED(c)")))
   (setq org-log-done 'time))
 
-(use-package yasnippet
-  :ensure t)
-
-(use-package python
-  :init
-  (elpy-enable)
-
-  :hook
-  ((python-mode . pygen-mode)
-   (python-mode . electric-operator-mode)
-   (python-mode . yas-minor-mode))
-
-
-  
-  :mode ("\\.py\\'" . python-mode)
-  :interpreter ("python" . python-mode))
-
 (use-package avy
   :ensure t
   :bind
@@ -157,3 +143,17 @@ initial-scratch-message nil)
   :ensure t
   :bind
   (("C-c C-<" . mc/mark-all-like-this)))
+
+(use-package python
+  :init
+  (elpy-enable)
+
+  :hook
+  ((python-mode . pygen-mode)
+   (python-mode . electric-operator-mode)
+   (python-mode . yas-minor-mode))
+
+
+  
+  :mode ("\\.py\\'" . python-mode)
+  :interpreter ("python" . python-mode))

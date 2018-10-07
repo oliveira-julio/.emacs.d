@@ -67,7 +67,32 @@ Was inspired by [[https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org][Sa
 
 #+end_src
 
-*** Theme
+*** Change “yes or no” to “y or n”
+#+begin_src emacs-lisp :tangle yes
+(fset 'yes-or-no-p 'y-or-n-p)
+#+end_src 
+
+*** Windows configuration
+Disables the menu, and the useless scrollbar and toolbar.
+#+begin_src emacs-lisp :tangle yes
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+#+end_src
+
+Move windows with shift
+#+begin_src emacs-lisp :tangle yes
+(windmove-default-keybindings)
+#+end_src
+
+Inhibit the startup screen, and initial (useless) messages
+#+begin_src emacs-lisp :tangle yes
+(setq inhibit-startup-screen  t
+initial-scratch-message nil)
+#+end_src
+
+
+** Theme
 #+begin_src emacs-lisp :tangle yes
   (use-package material-theme
     :ensure t
@@ -75,6 +100,50 @@ Was inspired by [[https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org][Sa
     (load-theme 'material t))
 #+end_src
 
+
+Shows the (Line, Column) information in the mode-line.
+#+begin_src emacs-lisp :tangle yes
+(line-number-mode   1)
+(column-number-mode 1)
+#+end_src
+
+Highlight both the current line and matching parenthesis.
+#+begin_src emacs-lisp :tangle yes
+(global-hl-line-mode   1)
+(show-paren-mode 1)
+#+end_src
+
+Enable telephone-line
+#+begin_src emacs-lisp :tangle yes
+  (use-package telephone-line
+    :init
+    (telephone-line-mode 1)
+    :config
+    (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
+          telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
+          telephone-line-primary-right-separator 'telephone-line-cubed-right
+          telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right))
+#+end_src
+
+Baterry and time
+#+begin_src emacs-lisp :tangle yes
+(display-battery-mode)
+(display-time-mode)
+#+end_src
+
+linum and linum relative
+#+begin_src emacs-lisp :tangle yes
+  (use-package linum
+    :config
+    (global-linum-mode t))
+
+  (use-package linum-relative
+    :config
+    (linum-relative-global-mode t))
+#+end_src
+
+
+** Tools
 *** Guide Key
 #+begin_src emacs-lisp :tangle yes
   (use-package guide-key
@@ -90,11 +159,6 @@ Was inspired by [[https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org][Sa
     (guide-key-mode 1))
 #+end_src
 
-
-*** Change “yes or no” to “y or n”
-#+begin_src emacs-lisp :tangle yes
-(fset 'yes-or-no-p 'y-or-n-p)
-#+end_src 
 
 *** helm
 #+begin_src emacs-lisp :tangle yes
@@ -122,70 +186,15 @@ Was inspired by [[https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org][Sa
              ("C-x c b" . my/helm-do-grep-book-notes)
              ("C-x c SPC" . helm-all-mark-rings)))
 #+end_src
-*** Windows configuration
-Disables the menu, and the useless scrollbar and toolbar.
+
+
+*** Yasnippet
 #+begin_src emacs-lisp :tangle yes
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
+  (use-package yasnippet
+    :ensure t)
 #+end_src
 
-Move windows with shift
-#+begin_src emacs-lisp :tangle yes
-(windmove-default-keybindings)
-#+end_src
-
-Inhibit the startup screen, and initial (useless) messages
-#+begin_src emacs-lisp :tangle yes
-(setq inhibit-startup-screen  t
-initial-scratch-message nil)
-#+end_src
-
-*** Mode line and highlight line
-Shows the (Line, Column) information in the mode-line.
-#+begin_src emacs-lisp :tangle yes
-(line-number-mode   1)
-(column-number-mode 1)
-#+end_src
-
-Highlight both the current line and matching parenthesis.
-#+begin_src emacs-lisp :tangle yes
-(global-hl-line-mode   1)
-(show-paren-mode 1)
-#+end_src
-
-Enable smart-mode-line
-#+begin_src emacs-lisp :tangle yes
-  (use-package telephone-line
-    :init
-    (telephone-line-mode 1)
-    :config
-    (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
-          telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
-          telephone-line-primary-right-separator 'telephone-line-cubed-right
-          telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right))
-#+end_src
-
-Baterry and time
-#+begin_src emacs-lisp :tangle yes
-(display-battery-mode)
-(display-time-mode)
-#+end_src
-
-*** linum and linum relative
-#+begin_src emacs-lisp :tangle yes
-  (use-package linum
-    :config
-    (global-linum-mode t))
-
-  (use-package linum-relative
-    :config
-    (linum-relative-global-mode t))
-#+end_src
-
-** Org
-
-*** Packages
+*** Org
 #+begin_src emacs-lisp :tangle yes
 
   (use-package org-bullets
@@ -209,14 +218,34 @@ Baterry and time
 #+end_src
 
 
-** Yasnippet
-*** Package
+*** avy
 #+begin_src emacs-lisp :tangle yes
-  (use-package yasnippet
-    :ensure t)
+  (use-package avy
+    :ensure t
+    :bind
+    (("C-c j" . avy-goto-char)))
 #+end_src
 
-** Python
+*** expand region
+#+begin_src emacs-lisp :tangle yes
+(use-package expand-region
+    :ensure t
+    :bind
+    (("C-=" . 'er/expand-region)))
+#+end_src
+
+
+*** mark all
+#+begin_src emacs-lisp :tangle yes
+  (use-package multiple-cursors
+    :ensure t
+    :bind
+    (("C-c C-<" . mc/mark-all-like-this)))
+#+end_src
+
+
+** Langs
+*** Python
 #+begin_src emacs-lisp :tangle yes
   (use-package python
     :init
@@ -231,29 +260,4 @@ Baterry and time
     
     :mode ("\\.py\\'" . python-mode)
     :interpreter ("python" . python-mode))
-#+end_src
-
-** avy
-#+begin_src emacs-lisp :tangle yes
-  (use-package avy
-    :ensure t
-    :bind
-    (("C-c j" . avy-goto-char)))
-#+end_src
-
-** expand region
-#+begin_src emacs-lisp :tangle yes
-(use-package expand-region
-    :ensure t
-    :bind
-    (("C-=" . 'er/expand-region)))
-#+end_src
-
-
-** mark all
-#+begin_src emacs-lisp :tangle yes
-  (use-package multiple-cursors
-    :ensure t
-    :bind
-    (("C-c C-<" . mc/mark-all-like-this)))
 #+end_src
