@@ -30,17 +30,47 @@
 (setq version-control t)
 (setq vc-make-backup-files t)
 
-(load-theme 'material t)
+(use-package material-theme
+  :ensure t
+  :init
+  (load-theme 'material t))
 
-(require 'helm)
-(require 'helm-config)
-(helm-mode 1)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+(use-package guide-key
+  :ensure t
+
+  :config
+  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4"))
+  (setq guide-key/guide-key-sequence '("C-x"))
+  (setq guide-key/guide-key-sequence '("C-c"))
+  (setq guide-key/recursive-key-sequence-flag t)
+
+  :init
+  (guide-key-mode 1))
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(use-package helm
+  :diminish helm-mode
+  :init
+
+  (progn
+    (require 'helm-config)
+    (helm-mode 1))
+
+  
+  :bind (("C-c h" . helm-mini)
+         ("C-h a" . helm-apropos)
+         ("C-x C-b" . helm-buffers-list)
+         ("C-x C-f" . helm-find-files)
+         ("C-x b" . helm-buffers-list)
+         ("M-y" . helm-show-kill-ring)
+         ("M-x" . helm-M-x)
+         ("C-x c o" . helm-occur)
+         ("C-x c s" . helm-swoop)
+         ("C-x c y" . helm-yas-complete)
+         ("C-x c Y" . helm-yas-create-snippet-on-region)
+         ("C-x c b" . my/helm-do-grep-book-notes)
+         ("C-x c SPC" . helm-all-mark-rings)))
 
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
@@ -57,48 +87,47 @@ initial-scratch-message nil)
 (global-hl-line-mode   1)
 (show-paren-mode 1)
 
-(require 'telephone-line)
-(telephone-line-mode 1)
-(setq telephone-line-primary-left-separator 'telephone-line-cubed-left
-      telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
-      telephone-line-primary-right-separator 'telephone-line-cubed-right
-      telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
+(use-package telephone-line
+  :init
+  (telephone-line-mode 1)
+  :config
+  (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
+        telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
+        telephone-line-primary-right-separator 'telephone-line-cubed-right
+        telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right))
 
 (display-battery-mode)
 (display-time-mode)
 
-(require 'ido)
-(ido-mode t)
+(use-package linum
+  :config
+  (global-linum-mode t))
 
-(require 'linum)
-(require 'linum-relative)
-(global-linum-mode t)
-(linum-relative-global-mode t)
+(use-package linum-relative
+  :config
+  (linum-relative-global-mode t))
 
-(require 'org-learn)
-(require 'org-drill)
-(require 'org-bullets)
+(use-package org-bullets
+  :ensure t)
+(use-package org
+  :ensure t
+  :hook
+  ((org-mode . org-indent-mode)
+   (org-mode . org-bullets-mode)
+   (org-mode . yas-minor-mode))
+  :bind
+  (("C-c l" . 'org-store-link)
+   ("C-c a" . 'org-agenda)
+   ("C-c c" . 'org-capture)
+   ("C-c b" . 'org-iswitchb))
+  :config
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "|" "DONE(d)")
+          (sequence "|" "CANCELED(c)")))
+  (setq org-log-done 'time))
 
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cb" 'org-iswitchb)
-
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "|" "DONE(d)")
-        (sequence "|" "CANCELED(c)")))
-
-(setq org-log-done 'time)
-
-;; (setq org-agenda-files '("~/Dropbox/org/agenda"))
-
-(add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
-
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
-(require 'yasnippet)
-
-(yas-global-mode 1)
+(use-package yasnippet
+  :ensure t)
 
 (use-package python
   :init
@@ -106,15 +135,25 @@ initial-scratch-message nil)
 
   :hook
   ((python-mode . pygen-mode)
-   (python-mode . electric-operator-mode))
+   (python-mode . electric-operator-mode)
+   (python-mode . yas-minor-mode))
 
 
   
   :mode ("\\.py\\'" . python-mode)
   :interpreter ("python" . python-mode))
 
-(global-set-key (kbd "C-c j") 'avy-goto-char)
+(use-package avy
+  :ensure t
+  :bind
+  (("C-c j" . avy-goto-char)))
 
-(global-set-key (kbd "C-=") 'er/expand-region)
+(use-package expand-region
+    :ensure t
+    :bind
+    (("C-=" . 'er/expand-region)))
 
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+(use-package multiple-cursors
+  :ensure t
+  :bind
+  (("C-c C-<" . mc/mark-all-like-this)))
